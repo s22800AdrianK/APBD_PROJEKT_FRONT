@@ -142,9 +142,9 @@ using Syncfusion.Blazor.Layouts;
             await CheckIfEmpty();
             Console.WriteLine(DataSource);
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            await JsRuntime.InvokeVoidAsync("alert", "Coudn't find Ticker");
+            await JsRuntime.InvokeVoidAsync("alert", e.Message);
             NavigationManager.NavigateTo("search");
         }
     }

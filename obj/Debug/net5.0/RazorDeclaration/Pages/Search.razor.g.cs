@@ -137,8 +137,15 @@ using Syncfusion.Blazor.DropDowns;
 
     private async Task GetCompanies(Microsoft.AspNetCore.Components.ChangeEventArgs args)
     {
-        companies = await StockService.GetCompanies(args.Value.ToString());
-        Console.WriteLine(companies.Count());
+        try
+        {
+            companies = await StockService.GetCompanies(args.Value.ToString());
+        }
+        catch(Exception e)
+        {
+                await JsRuntime.InvokeVoidAsync("alert", e.Message);
+        }
+        
     }
 
     private async Task GetDetails(Microsoft.AspNetCore.Components.ChangeEventArgs args)

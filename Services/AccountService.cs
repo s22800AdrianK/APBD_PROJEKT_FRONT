@@ -30,6 +30,7 @@ namespace ProjektFront.Services
         public async Task Login(Login model)
         {
             var res = await http.PostAsJsonAsync("Client/login", model);
+            if (res.StatusCode == System.Net.HttpStatusCode.BadRequest) throw new Exception(await res.Content.ReadAsStringAsync());
             User = await res.Content.ReadFromJsonAsync<User>();
             Console.WriteLine(User.refreshToken);
             await _localStorageService.SetItem(_userKey, User);
@@ -44,7 +45,8 @@ namespace ProjektFront.Services
 
         public async Task Register(AddClient model)
         {
-           await http.PostAsJsonAsync("Client/register", model);
+           var res = await http.PostAsJsonAsync("Client/register", model);
+           if (res.StatusCode == System.Net.HttpStatusCode.BadRequest) throw new Exception(await res.Content.ReadAsStringAsync());
         }
 
         public async Task RefreashToken()

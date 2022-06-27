@@ -1,4 +1,5 @@
-﻿using ProjektFront.Models;
+﻿using Microsoft.JSInterop;
+using ProjektFront.Models;
 using ProjektFront.Models.Client;
 using System;
 using System.Collections.Generic;
@@ -101,6 +102,10 @@ namespace ProjektFront.Services
                 await _accountService.RefreashToken();
                 addAuth();
                 return true;
+            }
+            else if(message.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                throw new Exception(message.Content.ToString());
             }
             return false;
         }
