@@ -1,0 +1,15 @@
+﻿@page "/"
+@inject IAccountService AccountService
+@inject NavigationManager NavigationManager
+<h1>Hello!</h1>
+
+Welcome to Stock Onion!!!!
+
+@if (AccountService.User == null)
+{
+    <span>Please Log in or Register</span>
+    <button class="btn btn-primary" @onclick="@(()=>NavigationManager.NavigateTo("user/login"))">Login</button>
+    <button class="btn btn-primary" @onclick="@(()=>NavigationManager.NavigateTo("user/register"))">Register</button>
+}
+
+<SurveyPrompt Title="How is Blazor working for you?" />

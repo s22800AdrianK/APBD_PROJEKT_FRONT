@@ -1,0 +1,5 @@
+﻿<StaticWebAssets Version="1.0">
+  <ContentRoot BasePath="/" Path="C:\Users\adria\APBD\ProjektFront\bin\Debug\net5.0\wwwroot\" />
+  <ContentRoot BasePath="/" Path="C:\Users\adria\APBD\ProjektFront\obj\Debug\net5.0\scopedcss\bundle\" />
+  <ContentRoot BasePath="_content/Syncfusion.Blazor" Path="C:\Users\adria\.nuget\packages\syncfusion.blazor\19.4.0.56\build\..\staticwebassets\" />
+</StaticWebAssets>

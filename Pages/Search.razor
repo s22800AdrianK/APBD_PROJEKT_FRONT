@@ -1,0 +1,39 @@
+﻿@page "/search"
+@using Syncfusion.Blazor.DropDowns
+@inject IStockService StockService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
+<h3>Search</h3>
+
+<SfAutoComplete TValue="string" TItem="Models.Company" DataSource="@companies" Placeholder="Company ticker" @oninput="@((e) => GetCompanies(e))" @onchange="@((e) => GetDetails(e))">
+    <AutoCompleteFieldSettings Value="ticker" />
+    <AutoCompleteTemplates TItem="Models.Company">
+        <HeaderTemplate>
+            <span><span>Name</span><span>Ticker</span></span>
+        </HeaderTemplate>
+        <ItemTemplate>
+            <span><span>@((context as Models.Company).name)</span><span>@((context as Models.Company).ticker)</span></span>
+        </ItemTemplate>
+    </AutoCompleteTemplates>
+</SfAutoComplete>
+@code {
+    private List<Models.Company> companies { get; set; }
+
+    protected override void OnInitialized()
+    {
+        companies = new List<Models.Company>();
+    }
+
+    private async Task GetCompanies(Microsoft.AspNetCore.Components.ChangeEventArgs args)
+    {
+        companies = await StockService.GetCompanies(args.Value.ToString());
+        Console.WriteLine(companies.Count());
+    }
+
+    private async Task GetDetails(Microsoft.AspNetCore.Components.ChangeEventArgs args)
+    {
+        var t = args.Value.ToString();
+        if (companies.Any(e => e.ticker == t)) NavigationManager.NavigateTo($"stock/{args.Value.ToString()}");
+        else await JsRuntime.InvokeVoidAsync("alert", "entered value not a ticker");
+    }
+}

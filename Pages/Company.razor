@@ -1,0 +1,138 @@
+﻿@page "/stock/{ticker}"
+@using Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.Layouts
+@inject NavigationManager NavigationManager
+@inject IStockService StockService
+@inject IAccountService AccountService
+@inject IJSRuntime JsRuntime
+
+@if (DataSource == null || CompanyDetailed == null)
+{
+    <div>Loading...</div>
+}
+else
+{ 
+    <SfDashboardLayout Columns="3" AllowResizing="true"  MediaQuery="height:auto">
+        <DashboardLayoutPanels>
+            <DashboardLayoutPanel Column="0" Row="0" SizeX="3">
+                <HeaderTemplate><div>Logo</div></HeaderTemplate>
+                <ContentTemplate>
+                    <img src="@(CompanyDetailed.branding.logo_url)?apiKey=1p7pfT07fHfgmupzsl4vHGteG2tEZMh7" alt="@(CompanyDetailed.name) Logo" />
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+            <DashboardLayoutPanel Column="1" Row="0" SizeX="3">
+                <HeaderTemplate> <div>More Info</div></HeaderTemplate>
+                <ContentTemplate>
+                    <div>
+                        <button type="button" class="btn btn-warning" @onclick="@(() => AddToWatchList())">Add to WatchList</button>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Ticker</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Locale</th>
+                                    <th scope="col">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@CompanyDetailed.ticker</td>
+                                    <td>@CompanyDetailed.name</td>
+                                    <td>@CompanyDetailed.locale</td>
+                                    <td>@CompanyDetailed.description</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </ContentTemplate>
+            </DashboardLayoutPanel>
+            <DashboardLayoutPanel Column="2" Row="2" SizeX="3" SizeY="2">
+                <HeaderTemplate>Chart</HeaderTemplate>
+                <ContentTemplate>
+                    <button type="button" class="btn btn-primary" @onclick="@(() => GetToTodayData())">Current day</button>
+                    <button type="button" class="btn btn-primary" @onclick="@(() => GetWeekData())">Last week</button>
+                    <button type="button" class="btn btn-primary" @onclick="@(() => GetThreeMonthsData())">Last 3 months</button>
+                    <SfChart @ref="Chart" Title="@ticker">
+                        <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.Category" />
+                        <ChartTooltipSettings Enable="true"></ChartTooltipSettings>
+                        <ChartSeriesCollection>
+                            <ChartSeries DataSource="@DataSource" High="High" Width="5" BearFillColor="darkred" XName="Date" Volume="Volume" BullFillColor="darkgreen" Low="Low" Open="Open" Close="Close" Type="ChartSeriesType.HiloOpenClose">
+                            </ChartSeries>
+                        </ChartSeriesCollection>
+                    </SfChart>
+                </ContentTemplate>           
+            </DashboardLayoutPanel>
+        </DashboardLayoutPanels>
+    </SfDashboardLayout>
+}
+
+<style>
+    img {
+        width: 100px;
+        aspect-ratio: 1/1;
+    }
+
+    .e-panel-header {
+        background-color: rgba(0, 0, 0, .1);
+        text-align: center;
+    }
+
+    .e-panel-content {
+        text-align: center;
+        margin-top: 10px;
+        height: auto;
+    }
+</style>
+@code{
+    [Parameter]
+    public string ticker { get; set; }
+    public CompanyDetailed CompanyDetailed { get; set; }
+    public List<ChartData> DataSource { get; set; }
+    public SfChart Chart;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            CompanyDetailed = await StockService.GetCompany(ticker);
+            DataSource = StockService.ToChartData(await StockService.GetOHLC(ticker, DateTime.Now.AddMonths(-3), DateTime.Now, "day"));
+            await CheckIfEmpty();
+            Console.WriteLine(DataSource);
+        }
+        catch (Exception)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Coudn't find Ticker");
+            NavigationManager.NavigateTo("search");
+        }
+    }
+    private async Task GetToTodayData()
+    {
+        DataSource = StockService.ToChartData(await StockService.GetOHLC(ticker, DateTime.Now.AddDays(-1), DateTime.Now, "hour"));
+        await CheckIfEmpty();
+        await Chart.RefreshAsync();
+    }
+
+    private async Task GetThreeMonthsData()
+    {
+        DataSource = StockService.ToChartData(await StockService.GetOHLC(ticker, DateTime.Now.AddMonths(-3), DateTime.Now, "day"));
+        await CheckIfEmpty();
+        await Chart.RefreshAsync();
+    }
+
+    private async Task GetWeekData()
+    {
+        DataSource = StockService.ToChartData(await StockService.GetOHLC(ticker, DateTime.Now.AddDays(-7), DateTime.Now, "day"));
+        await CheckIfEmpty();
+        await Chart.RefreshAsync();
+    }
+
+    private async Task CheckIfEmpty()
+    {
+        if (DataSource.Count() == 0) await JsRuntime.InvokeVoidAsync("alert", "Try diffrent date no data to schow");
+    }
+
+    private async Task AddToWatchList()
+    {
+        await StockService.AddToWatchlist(AccountService.User.id,ticker);
+    }
+
+}
