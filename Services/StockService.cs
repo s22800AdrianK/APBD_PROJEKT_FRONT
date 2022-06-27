@@ -105,7 +105,7 @@ namespace ProjektFront.Services
             }
             else if(message.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                throw new Exception(message.Content.ToString());
+                throw new Exception(await message.Content.ReadAsStringAsync());
             }
             return false;
         }

@@ -164,6 +164,7 @@ using Syncfusion.Blazor.Charts;
     private async Task Delete(string ticker)
     {
         await StockService.Delete(AccountService.User.id, ticker);
+        NavigationManager.NavigateTo("/user/watchlist", true);
     }
 
 #line default
