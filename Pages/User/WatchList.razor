@@ -4,37 +4,44 @@
 @inject NavigationManager NavigationManager
 @inject IStockService StockService
 
-<table>
-    <thead>
-        <tr>
-            <th @onclick="@(()=>Sort("branding"))">
-                Logo
-            </th>
-            <th @onclick="@(()=>Sort("name"))">
-                Ticker
-            </th>
-            <th @onclick="@(()=>Sort("ticker"))">
-                Name
-            </th>
-            <th @onclick="@(()=>Sort("locale"))">
-                Locale
-            </th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var com in companies)
-        {
+@if (companies == null)
+{
+    <div>Loading...</div>
+}
+else
+{
+    <table>
+        <thead>
             <tr>
-                <td @onclick="@(()=>NavigationManager.NavigateTo($"stock/{com.ticker}"))"><img alt="@(com.name)" src="@(com.branding.logo_url)?apiKey=1p7pfT07fHfgmupzsl4vHGteG2tEZMh7" /></td>
-                <td>@com.ticker</td>
-                <td>@com.name</td>
-                <td>@com.locale</td>
-                <td><button @onclick="@(()=>Delete(com.ticker))">DELETE</button></td>
+                <th>
+                    Logo
+                </th>
+                <th @onclick="@(()=>Sort("ticker"))">
+                    Ticker
+                </th>
+                <th @onclick="@(()=>Sort("name"))">
+                    Name
+                </th>
+                <th @onclick="@(()=>Sort("locale"))">
+                    Locale
+                </th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var com in companies)
+            {
+                <tr>
+                    <td @onclick="@(()=>NavigationManager.NavigateTo($"stock/{com.ticker}"))"><img alt="@(com.name)" src="@(com.branding.logo_url)?apiKey=1p7pfT07fHfgmupzsl4vHGteG2tEZMh7" /></td>
+                    <td>@com.ticker</td>
+                    <td>@com.name</td>
+                    <td>@com.locale</td>
+                    <td><button class="btn btn-danger" @onclick="@(()=>Delete(com.ticker))">DELETE</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 <style>
     img {
@@ -67,7 +74,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        companies = await StockService.GetWatchList(AccountService.User.id);
+        if (AccountService.User != null)
+            companies = await StockService.GetWatchList(AccountService.User.id);
+        else NavigationManager.NavigateTo("/user/login");
     }
 
     private void Sort(string sortColumn)

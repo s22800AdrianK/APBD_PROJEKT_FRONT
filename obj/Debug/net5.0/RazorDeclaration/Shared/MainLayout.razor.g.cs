@@ -118,7 +118,7 @@ using Syncfusion.Blazor.Charts;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 22 "C:\Users\adria\APBD\ProjektFront\Shared\MainLayout.razor"
+#line 23 "C:\Users\adria\APBD\ProjektFront\Shared\MainLayout.razor"
        
     public bool LoggedIn
     {

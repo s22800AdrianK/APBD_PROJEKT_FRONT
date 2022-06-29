@@ -49,7 +49,7 @@ else
             <DashboardLayoutPanel Column="2" Row="2" SizeX="3" SizeY="2">
                 <HeaderTemplate>Chart</HeaderTemplate>
                 <ContentTemplate>
-                    <button type="button" class="btn btn-primary" @onclick="@(() => GetToTodayData())">Current day</button>
+                    <button type="button" class="btn btn-primary" @onclick="@(() => GetToTodayData())">Last Day</button>
                     <button type="button" class="btn btn-primary" @onclick="@(() => GetWeekData())">Last week</button>
                     <button type="button" class="btn btn-primary" @onclick="@(() => GetThreeMonthsData())">Last 3 months</button>
                     <SfChart @ref="Chart" Title="@ticker">
@@ -82,6 +82,7 @@ else
         margin-top: 10px;
         height: auto;
     }
+
 </style>
 @code{
     [Parameter]

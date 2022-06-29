@@ -118,7 +118,7 @@ using Syncfusion.Blazor.Charts;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 12 "C:\Users\adria\APBD\ProjektFront\Shared\SurveyPrompt.razor"
+#line 13 "C:\Users\adria\APBD\ProjektFront\Shared\SurveyPrompt.razor"
        
     // Demonstrates how a parent component can supply parameters
     [Parameter]

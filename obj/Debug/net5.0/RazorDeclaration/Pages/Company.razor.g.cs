@@ -126,7 +126,7 @@ using Syncfusion.Blazor.Layouts;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 86 "C:\Users\adria\APBD\ProjektFront\Pages\Company.razor"
+#line 87 "C:\Users\adria\APBD\ProjektFront\Pages\Company.razor"
       
     [Parameter]
     public string ticker { get; set; }

@@ -118,7 +118,7 @@ using Syncfusion.Blazor.Charts;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 28 "C:\Users\adria\APBD\ProjektFront\Shared\NavMenu.razor"
+#line 30 "C:\Users\adria\APBD\ProjektFront\Shared\NavMenu.razor"
        
     private bool collapseNavMenu = true;
 

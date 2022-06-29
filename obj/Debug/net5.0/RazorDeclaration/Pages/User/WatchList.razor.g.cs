@@ -119,7 +119,7 @@ using Syncfusion.Blazor.Charts;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 62 "C:\Users\adria\APBD\ProjektFront\Pages\User\WatchList.razor"
+#line 69 "C:\Users\adria\APBD\ProjektFront\Pages\User\WatchList.razor"
        
     public string API_KEY = "1p7pfT07fHfgmupzsl4vHGteG2tEZMh7";
     public List<CompanyDetailed> companies { get; set; } = new List<CompanyDetailed>();
@@ -128,7 +128,9 @@ using Syncfusion.Blazor.Charts;
 
     protected override async Task OnInitializedAsync()
     {
-        companies = await StockService.GetWatchList(AccountService.User.id);
+        if (AccountService.User != null)
+            companies = await StockService.GetWatchList(AccountService.User.id);
+        else NavigationManager.NavigateTo("/user/login");
     }
 
     private void Sort(string sortColumn)
